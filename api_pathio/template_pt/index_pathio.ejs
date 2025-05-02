@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathio</title>
+    <script>
+        function updateImage() {
+            const selectedFile = document.getElementById("imageSelect").value;
+            const imageUrl = "/converted_images/" + selectedFile;
+
+            document.getElementById("radarImage").src = imageUrl;
+            document.getElementById("imageUrl").textContent = imageUrl;
+            document.getElementById("imageUrl").href = imageUrl;
+        }
+
+        function downloadAll() {
+            const links = document.querySelectorAll(".image-download");
+            links.forEach((link, index) => {
+                setTimeout(() => {
+                    link.click();
+                }, index * 500);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1> ภาพเรดาร์ (JPG)</h1>
+
+    <% if (convertedFiles.length > 0) { %>
+        <label for="imageSelect">เลือกภาพ:</label>
+        <select id="imageSelect" onchange="updateImage()">
+            <% convertedFiles.forEach(file => { %>
+                <option value="<%= file %>"><%= file %></option>
+            <% }); %>
+        </select>
+
+        <br><br>
+
+        <img id="radarImage" src="/converted_images/<%= convertedFiles[0] %>" alt="Radar Image" width="500">
+
+        <br>
+        <p>URL ของภาพ: <a id="imageUrl" href="/converted_images/<%= convertedFiles[0] %>" target="_blank">
+            /converted_images/<%= convertedFiles[0] %>
+        </a></p>
+
+        <br>
+
+        <button onclick="downloadAll()">ดาวน์โหลดทั้งหมด</button>
+
+        <ul>
+            <% convertedFiles.forEach(file => { %>
+                <li>
+                    <a class="image-download" href="/converted_images/<%= file %>" download>
+                        <%= file %>
+                    </a>
+                </li>
+            <% }); %>
+        </ul>
+
+    <% } else { %>
+        <p>ไม่มีข้อมูลภาพ</p>
+    <% } %>
+
+</body>
+</html>
